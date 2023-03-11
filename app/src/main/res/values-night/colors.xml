@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#DDDCDC</color>
+
+    <color name="yellow_color">#00CA4C</color>
+    <color name="selected_on">#E3E2E4</color>
+    <color name="cat_color">#1E1E1E</color>
+    <color name="cat_name_color">#BEBEBE</color>
+    <color name="naw_draw_background">#212121</color>
+    <color name="naw_draw_item_click_background">#7A000000</color>
+    <color name="user_name_color">#FFFFFF</color>
+    <color name="naw_draw_text_color">#FFFFFF</color>
+</resources>

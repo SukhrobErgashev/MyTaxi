@@ -1,0 +1,38 @@
+package com.example.mytaxi.presentation.viewmodel
+
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mytaxi.domen.model.UserLocation
+import com.example.mytaxi.domen.repository.MyTaxiRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class MainViewModel @Inject constructor(private val repository: MyTaxiRepository) : ViewModel() {
+
+    private var _storedLocationList = MutableStateFlow<List<UserLocation>>(emptyList())
+    val storedLocationList: StateFlow<List<UserLocation>> get() = _storedLocationList
+
+    private var _latestLocation = MutableStateFlow(
+        UserLocation(-1, -1.0, -1.0)
+    )
+    val latestLocation: StateFlow<UserLocation> get() = _latestLocation
+
+    init {
+        getStoredLocationList()
+    }
+
+    private fun getStoredLocationList() = viewModelScope.launch {
+        repository.getStoredLocationList().collect {
+            if (it.isNotEmpty()) {
+                _storedLocationList.value = it
+                _latestLocation.value = it.first()
+            }
+        }
+    }
+
+}

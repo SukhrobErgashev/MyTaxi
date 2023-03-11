@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mapBoxScreen">
+
+    <fragment
+        android:id="@+id/locationTrackerScreen"
+        android:name="com.example.mytaxi.presentation.screens.LocationTrackerScreen"
+        android:label="screen_location_tracker"
+        tools:layout="@layout/screen_location_tracker" />
+    <fragment
+        android:id="@+id/mapBoxScreen"
+        android:name="com.example.mytaxi.presentation.screens.MapBoxScreen"
+        android:label="screen_map_box"
+        tools:layout="@layout/screen_map_box" />
+</navigation>
