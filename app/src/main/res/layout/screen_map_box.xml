@@ -40,32 +40,28 @@
             android:src="@drawable/ic_drawer" />
     </androidx.cardview.widget.CardView>
 
-    <ImageView
-        android:id="@+id/ivNotificationImage"
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardNotification"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:foreground="@drawable/ripple_effect_card"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="12dp"
-        android:background="@drawable/shape_notification"
-        android:foreground="@drawable/ripple_effect_card"
-        android:padding="8dp"
-        android:src="@drawable/ic_notification"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/card_background"
+        app:cardCornerRadius="50dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!--    <androidx.cardview.widget.CardView-->
-    <!--        android:id="@+id/ivNotificationClick"-->
-    <!--        android:layout_width="45dp"-->
-    <!--        android:layout_height="45dp"-->
-    <!--        android:layout_marginTop="32dp"-->
-    <!--        android:layout_marginEnd="12dp"-->
-    <!--        android:background="@color/card_background"-->
-    <!--        android:clickable="true"-->
-    <!--        android:focusable="true"-->
-    <!--        android:theme="@style/ShapeAppearanceOverlay.App.CornerSizePercent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+        <ImageView
+            android:id="@+id/imageNotification"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:src="@drawable/ic_notification" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/tvNotificationCount"
@@ -74,6 +70,7 @@
         android:layout_marginStart="34dp"
         android:layout_marginBottom="34dp"
         android:background="@drawable/shape_notification_counter"
+        android:elevation="4dp"
         android:fontFamily="@font/roboto_bold"
         android:maxLength="2"
         android:paddingStart="6dp"
@@ -83,10 +80,10 @@
         android:text="1"
         android:textColor="@color/white"
         android:textSize="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivNotificationImage"
-        app:layout_constraintEnd_toEndOf="@+id/ivNotificationImage"
-        app:layout_constraintStart_toStartOf="@+id/ivNotificationImage"
-        app:layout_constraintTop_toTopOf="@+id/ivNotificationImage" />
+        app:layout_constraintBottom_toBottomOf="@+id/cardNotification"
+        app:layout_constraintEnd_toEndOf="@+id/cardNotification"
+        app:layout_constraintStart_toStartOf="@+id/cardNotification"
+        app:layout_constraintTop_toTopOf="@+id/cardNotification" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -96,7 +93,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="35dp"
         app:cardCornerRadius="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/ivNotificationImage"
+        app:layout_constraintEnd_toStartOf="@+id/cardNotification"
         app:layout_constraintStart_toEndOf="@+id/cardNavDraw"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="SpeakableTextPresentCheck">
@@ -138,9 +135,10 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardTheme"
         android:layout_width="45dp"
+        android:foreground="@drawable/ripple_effect_card"
         android:layout_height="45dp"
         android:layout_marginStart="12dp"
         android:clickable="true"
@@ -160,13 +158,14 @@
             android:layout_height="match_parent"
             android:padding="10dp"
             android:src="@drawable/ic_thunder" />
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardZoomIn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginBottom="20dp"
+        android:foreground="@drawable/ripple_effect_card"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
@@ -175,7 +174,7 @@
         app:layout_constraintBottom_toTopOf="@+id/cardZoomOut"
         app:layout_constraintEnd_toEndOf="@+id/cardZoomOut"
         app:layout_constraintStart_toStartOf="@+id/cardZoomOut"
-        app:layout_constraintTop_toBottomOf="@+id/ivNotificationImage"
+        app:layout_constraintTop_toBottomOf="@+id/cardNotification"
         app:layout_constraintVertical_bias="1.0"
         tools:ignore="SpeakableTextPresentCheck">
 
@@ -186,12 +185,13 @@
             android:padding="12dp"
             android:src="@drawable/ic_plus" />
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardZoomOut"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:foreground="@drawable/ripple_effect_card"
         android:layout_marginBottom="40dp"
         android:clickable="true"
         android:focusable="true"
@@ -210,9 +210,9 @@
             android:padding="12dp"
             android:src="@drawable/ic_minus" />
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/card_navigation"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -220,6 +220,7 @@
         android:layout_marginBottom="50dp"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="@drawable/ripple_effect_card"
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="20dp"
@@ -235,7 +236,7 @@
             android:layout_height="match_parent"
             android:padding="12dp"
             android:src="@drawable/ic_navigator" />
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:id="@+id/orderContainer"
