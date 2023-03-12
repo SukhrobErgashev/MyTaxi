@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardNavDraw"
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -24,10 +24,10 @@
         android:layout_marginTop="32dp"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="@drawable/ripple_effect_card"
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="23dp"
-        android:foreground="@drawable/ripple_effect_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="SpeakableTextPresentCheck">
@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:padding="12dp"
             android:src="@drawable/ic_drawer" />
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
     <ImageView
         android:id="@+id/ivNotificationImage"

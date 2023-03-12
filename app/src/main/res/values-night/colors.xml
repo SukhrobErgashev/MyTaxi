@@ -3,7 +3,7 @@
     <color name="background">#DDDCDC</color>
     <color name="status_bar">#2c2c2c</color>
     <color name="card_background">#BEBEBE</color>
-    <color name="card_ripple_effect_color">#BC0D0D</color>
+    <color name="card_ripple_effect_color">#ffffff</color>
 
     <color name="yellow_color">#00CA4C</color>
     <color name="selected_on">#E3E2E4</color>
