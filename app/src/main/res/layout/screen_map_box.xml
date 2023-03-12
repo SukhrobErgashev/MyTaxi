@@ -27,9 +27,9 @@
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="23dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/cardView"
         tools:ignore="SpeakableTextPresentCheck">
 
         <ImageView
@@ -40,6 +40,50 @@
             android:src="@drawable/ic_drawer" />
     </androidx.cardview.widget.CardView>
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="35dp"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/card_notification"
+        app:layout_constraintStart_toEndOf="@+id/card_drawer"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck">
+
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/left"
+                android:layout_width="0dp"
+                android:checked="true"
+                android:layout_height="wrap_content"
+                style="@style/TextViewStyle"
+                android:layout_weight="1"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:background="@drawable/selector_radio_btn"
+                android:text="@string/free" />
+
+
+            <RadioButton
+                android:id="@+id/right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_radio_btn"
+                android:layout_weight="1"
+                style="@style/TextViewStyle"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:text="@string/taken" />
+        </RadioGroup>
+    </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_notification"
@@ -51,9 +95,9 @@
         android:foreground="@drawable/ripple_effect_card"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline">
+        app:layout_constraintTop_toTopOf="@+id/cardView">
 
         <ImageView
             android:id="@+id/image_notification"
@@ -174,7 +218,7 @@
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/tariffContainer"
+        app:layout_constraintBottom_toTopOf="@+id/container_tariff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_drawer"
         app:layout_constraintVertical_bias="0.90999997"
@@ -196,7 +240,7 @@
         android:layout_marginBottom="20dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/friezeContainer"
+        app:layout_constraintEnd_toStartOf="@+id/container_frieze"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -261,17 +305,17 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/friezeContainer"
+        android:id="@+id/container_frieze"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/orderContainer"
-        app:layout_constraintEnd_toStartOf="@+id/tariffContainer"
+        app:layout_constraintEnd_toStartOf="@+id/container_tariff"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/orderContainer">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardFrieze"
+            android:id="@+id/card_frieze"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:clickable="true"
@@ -289,7 +333,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/tvFrieze"
+            android:id="@+id/text_frieze"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -302,7 +346,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tariffContainer"
+        android:id="@+id/container_tariff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -310,10 +354,10 @@
         app:layout_constraintBottom_toBottomOf="@+id/orderContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/friezeContainer">
+        app:layout_constraintStart_toEndOf="@+id/container_frieze">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardTariff"
+            android:id="@+id/card_tariff"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:clickable="true"
@@ -331,7 +375,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/tvTariff"
+            android:id="@+id/text_tariff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -342,12 +386,5 @@
             android:textColor="@color/cat_name_color"
             android:textSize="14dp" />
     </LinearLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.08" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,11 +6,6 @@
     app:startDestination="@id/mapBoxScreen">
 
     <fragment
-        android:id="@+id/locationTrackerScreen"
-        android:name="com.example.mytaxi.presentation.screens.LocationTrackerScreen"
-        android:label="screen_location_tracker"
-        tools:layout="@layout/screen_location_tracker" />
-    <fragment
         android:id="@+id/mapBoxScreen"
         android:name="com.example.mytaxi.presentation.screens.MapBoxScreen"
         android:label="screen_map_box"

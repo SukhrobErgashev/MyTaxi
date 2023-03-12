@@ -13,7 +13,7 @@
     <color name="card_background">#ffffff</color>
     <color name="card_ripple_effect_color">#9E9999</color>
     <color name="tab_background_color">#ffffff</color>
-    <color name="tab_selected_color">#ffffff</color>
+    <color name="tab_selected_color">#00CA4C</color>
 
     <color name="green">#00CA4C</color>
     <color name="selected_on">#E3E2E4</color>

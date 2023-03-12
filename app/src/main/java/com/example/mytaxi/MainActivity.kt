@@ -11,23 +11,13 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import by.kirich1409.viewbindingdelegate.viewBinding
-import com.example.mytaxi.databinding.ActivityMainBinding
-import com.example.mytaxi.presentation.adapter.ViewPagerAdapter
 import com.example.mytaxi.service.LocationForegroundService
 import com.example.mytaxi.utils.LOCATION_PERMISSION_REQUEST_CODE
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
-
-    private lateinit var adapter: ViewPagerAdapter
-    private val viewBinding: ActivityMainBinding by viewBinding(R.id.mainRoot)
-
-    //private val tabs = arrayOf(resources.getString(R.string.free), resources.getString(R.string.taken))
-    private val tabs = arrayOf("Свободен", "Занять")
+class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,17 +25,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         setContentView(R.layout.activity_main)
 
         requestLocationPermission()
-        adapter = ViewPagerAdapter(this)
-
-        viewBinding.viewPager2.adapter = adapter
-        viewBinding.viewPager2.isUserInputEnabled = false
-
-        TabLayoutMediator(
-            findViewById(R.id.tab_layout),
-            findViewById(R.id.viewPager2)
-        ) { tab, position ->
-            tab.text = tabs[position]
-        }.attach()
     }
 
     private fun startLocationService() {

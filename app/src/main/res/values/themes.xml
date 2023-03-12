@@ -21,4 +21,9 @@
     <style name="TabLayoutFont" parent="Widget.MaterialComponents.TabLayout">
         <item name="fontFamily">@font/roboto_regular</item>
     </style>
+
+    <style name="TextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@drawable/selector_text_color</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+    </style>
 </resources>
