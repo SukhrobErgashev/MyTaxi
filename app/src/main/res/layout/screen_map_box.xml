@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardNavDraw"
+        android:id="@+id/card_drawer"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="12dp"
@@ -33,7 +33,7 @@
         tools:ignore="SpeakableTextPresentCheck">
 
         <ImageView
-            android:id="@+id/ivNavDrawImage"
+            android:id="@+id/image_drawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="12dp"
@@ -42,7 +42,7 @@
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardNotification"
+        android:id="@+id/card_notification"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:foreground="@drawable/ripple_effect_card"
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageNotification"
+            android:id="@+id/image_notification"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp"
@@ -64,7 +64,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/tvNotificationCount"
+        android:id="@+id/indicator_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="34dp"
@@ -80,10 +80,10 @@
         android:text="1"
         android:textColor="@color/white"
         android:textSize="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardNotification"
-        app:layout_constraintEnd_toEndOf="@+id/cardNotification"
-        app:layout_constraintStart_toStartOf="@+id/cardNotification"
-        app:layout_constraintTop_toTopOf="@+id/cardNotification" />
+        app:layout_constraintBottom_toBottomOf="@+id/card_notification"
+        app:layout_constraintEnd_toEndOf="@+id/card_notification"
+        app:layout_constraintStart_toStartOf="@+id/card_notification"
+        app:layout_constraintTop_toTopOf="@+id/card_notification" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -92,9 +92,10 @@
         android:layout_marginStart="35dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="35dp"
+        android:visibility="gone"
         app:cardCornerRadius="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/cardNotification"
-        app:layout_constraintStart_toEndOf="@+id/cardNavDraw"
+        app:layout_constraintEnd_toStartOf="@+id/card_notification"
+        app:layout_constraintStart_toEndOf="@+id/card_drawer"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="SpeakableTextPresentCheck">
 
@@ -136,7 +137,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardTheme"
+        android:id="@+id/card_thunder"
         android:layout_width="45dp"
         android:foreground="@drawable/ripple_effect_card"
         android:layout_height="45dp"
@@ -148,12 +149,12 @@
         app:cardCornerRadius="23dp"
         app:layout_constraintBottom_toTopOf="@+id/orderContainer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardNavDraw"
+        app:layout_constraintTop_toBottomOf="@+id/card_drawer"
         app:layout_constraintVertical_bias="0.65999997"
         tools:ignore="SpeakableTextPresentCheck">
 
         <ImageView
-            android:id="@+id/ivThemeImage"
+            android:id="@+id/image_thunder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp"
@@ -161,7 +162,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardZoomIn"
+        android:id="@+id/card_zoom_in"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginBottom="20dp"
@@ -171,15 +172,15 @@
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardZoomOut"
-        app:layout_constraintEnd_toEndOf="@+id/cardZoomOut"
-        app:layout_constraintStart_toStartOf="@+id/cardZoomOut"
-        app:layout_constraintTop_toBottomOf="@+id/cardNotification"
+        app:layout_constraintBottom_toTopOf="@+id/card_zoom_out"
+        app:layout_constraintEnd_toEndOf="@+id/card_zoom_out"
+        app:layout_constraintStart_toStartOf="@+id/card_zoom_out"
+        app:layout_constraintTop_toBottomOf="@+id/card_notification"
         app:layout_constraintVertical_bias="1.0"
         tools:ignore="SpeakableTextPresentCheck">
 
         <ImageView
-            android:id="@+id/ivZoomInImage"
+            android:id="@+id/image_zoom_in"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="12dp"
@@ -188,7 +189,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardZoomOut"
+        android:id="@+id/card_zoom_out"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:foreground="@drawable/ripple_effect_card"
@@ -198,13 +199,13 @@
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/card_navigation"
-        app:layout_constraintEnd_toEndOf="@+id/card_navigation"
-        app:layout_constraintStart_toStartOf="@+id/card_navigation"
+        app:layout_constraintBottom_toTopOf="@+id/card_current_location"
+        app:layout_constraintEnd_toEndOf="@+id/card_current_location"
+        app:layout_constraintStart_toStartOf="@+id/card_current_location"
         tools:ignore="SpeakableTextPresentCheck">
 
         <ImageView
-            android:id="@+id/ivZoomOutImage"
+            android:id="@+id/image_zoom_out"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="12dp"
@@ -213,7 +214,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/card_navigation"
+        android:id="@+id/card_current_location"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="15dp"
@@ -226,12 +227,12 @@
         app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toTopOf="@+id/tariffContainer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardNavDraw"
+        app:layout_constraintTop_toBottomOf="@+id/card_drawer"
         app:layout_constraintVertical_bias="0.90999997"
         tools:ignore="SpeakableTextPresentCheck">
 
         <ImageView
-            android:id="@+id/ivLocationImage"
+            android:id="@+id/image_current_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="12dp"
@@ -276,7 +277,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/tvOrderCount"
+                android:id="@+id/indicator_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
@@ -298,7 +299,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/tvOrder"
+            android:id="@+id/text_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
