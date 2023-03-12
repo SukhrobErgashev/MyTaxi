@@ -1,6 +1,7 @@
 package com.example.mytaxi
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -23,18 +24,13 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 
-val tabs = arrayOf(
-    "mapbox",
-    "tracker"
-)
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private lateinit var adapter: ViewPagerAdapter
-    private lateinit var locationManager: LocationManager
-
     private val viewBinding: ActivityMainBinding by viewBinding(R.id.mainRoot)
+
+    val tabs = arrayOf("mapbox", "tracker")
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +53,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private fun startLocationService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(Intent(this, LocationForegroundService::class.java))
+            if (!isServiceWorking())
+                startForegroundService(Intent(this, LocationForegroundService::class.java))
         } else {
-            startService(Intent(this, LocationForegroundService::class.java))
+            if (!isServiceWorking())
+                startService(Intent(this, LocationForegroundService::class.java))
         }
     }
 
@@ -113,4 +111,19 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             }
         }
     }
+
+    @Suppress("DEPRECATION")
+    private fun isServiceWorking(): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningServices = manager.getRunningServices(Integer.MAX_VALUE)
+
+        for (service in runningServices) {
+            if (LocationForegroundService::class.java.name == service.service.className) {
+                // Foreground service is already running, do not restart
+                return true
+            }
+        }
+        return false
+    }
+
 }

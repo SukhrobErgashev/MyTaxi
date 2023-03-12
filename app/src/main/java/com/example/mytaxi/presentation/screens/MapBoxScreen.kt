@@ -1,14 +1,12 @@
 package com.example.mytaxi.presentation.screens
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
@@ -21,15 +19,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.mytaxi.R
 import com.example.mytaxi.databinding.ScreenMapBoxBinding
 import com.example.mytaxi.presentation.viewmodel.MainViewModel
-import com.example.mytaxi.service.LocationForegroundService
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.CameraState
 import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.Style
-import com.mapbox.maps.plugin.animation.camera
-import com.mapbox.maps.plugin.annotation.AnnotationConfig
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
@@ -37,10 +32,6 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.compass.compass
 import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
-import com.mapbox.maps.plugin.gestures.gestures
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
-import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.plugin.scalebar.scalebar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -55,8 +46,13 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
     private lateinit var mapboxMap: MapboxMap
     private var cameraState: CameraState? = null
 
+    private var usersLatestLocation: Point? = null
+    private var isFirstEntering: Boolean = true
+    private var zoomLevel: Double = 17.0
+
     private val listener = OnCameraChangeListener {
         cameraState = mapboxMap.cameraState
+        zoomLevel = cameraState!!.zoom
     }
 
     private lateinit var annotationApi: AnnotationPlugin
@@ -77,7 +73,27 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
 
         observeLatestLocation()
         setMapTheme()
+        setClickListeners()
 
+    }
+
+    private fun setClickListeners() {
+        with(binding) {
+            cardZoomIn.setOnClickListener { zoomLevel++; resetCamera() }
+            cardZoomOut.setOnClickListener { zoomLevel--; resetCamera() }
+            cardNavigation.setOnClickListener {
+                val cameraPosition = CameraOptions.Builder()
+                    .center(
+                        Point.fromLngLat(
+                            usersLatestLocation!!.longitude(),
+                            usersLatestLocation!!.latitude()
+                        )
+                    )
+                    .zoom(zoomLevel)
+                    .build()
+                mapboxMap.setCamera(cameraPosition)
+            }
+        }
     }
 
     private fun observeLatestLocation() = lifecycleScope.launch {
@@ -85,6 +101,7 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
             viewModel.latestLocation.collect {
                 if (it.longitude != -1.0) {
                     addAnnotationToMap(it.longitude, it.latitude)
+                    usersLatestLocation = Point.fromLngLat(it.longitude, it.latitude)
                 }
             }
         }
@@ -101,18 +118,27 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
             pointAnnotationManager.create(pointAnnotationOptions)
         }
 
-        val cameraPosition = if (cameraState?.center?.longitude() == 0.0) {
-            CameraOptions.Builder().zoom(17.0)
-                .center(Point.fromLngLat(lng, lat))
-                .build()
-        } else {
-            CameraOptions.Builder().zoom(cameraState!!.zoom)
-                .center(cameraState!!.center)
-                .build()
+        if (isFirstEntering) {
+            initializeCamera(lng, lat); return
         }
+        resetCamera()
+    }
 
-        // set camera position
-        //mapView.getMapboxMap().setCamera(cameraPosition)
+    private fun initializeCamera(lng: Double, lat: Double) {
+        val cameraPosition = CameraOptions.Builder()
+            .center(Point.fromLngLat(lng, lat))
+            .zoom(17.0)
+            .build()
+        mapboxMap.setCamera(cameraPosition)
+        cameraState = mapboxMap.cameraState
+        isFirstEntering = false
+    }
+
+    private fun resetCamera() {
+        val cameraPosition = CameraOptions.Builder()
+            .center(cameraState?.center)
+            .zoom(zoomLevel)
+            .build()
         mapboxMap.setCamera(cameraPosition)
     }
 
@@ -142,15 +168,19 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
 
     private fun setMapTheme() {
         if (isUsingNightModeResources()) {
-            binding.mapView.getMapboxMap().loadStyleUri(Style.DARK)
-            binding.ivOrders.setBackgroundResource(R.drawable.shape_category_night)
-            binding.ivFrieze.setBackgroundResource(R.drawable.shape_category_night)
-            binding.ivTariff.setBackgroundResource(R.drawable.shape_category_night)
+            with(binding) {
+                mapView.getMapboxMap().loadStyleUri(Style.DARK)
+                imageOrders.setBackgroundResource(R.drawable.shape_category_night)
+                imageFrieze.setBackgroundResource(R.drawable.shape_category_night)
+                imageTariff.setBackgroundResource(R.drawable.shape_category_night)
+            }
         } else {
-            binding.mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS)
-            binding.ivOrders.setBackgroundResource(R.drawable.shape_category)
-            binding.ivFrieze.setBackgroundResource(R.drawable.shape_category)
-            binding.ivTariff.setBackgroundResource(R.drawable.shape_category)
+            with(binding) {
+                mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS)
+                imageOrders.setBackgroundResource(R.drawable.shape_category)
+                imageFrieze.setBackgroundResource(R.drawable.shape_category)
+                imageTariff.setBackgroundResource(R.drawable.shape_category)
+            }
         }
     }
 
