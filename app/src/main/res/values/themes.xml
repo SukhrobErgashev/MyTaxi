@@ -17,4 +17,8 @@
     <style name="ShapeAppearanceOverlay.App.CornerSizePercent" parent="">
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="TabLayoutFont" parent="Widget.MaterialComponents.TabLayout">
+        <item name="fontFamily">@font/roboto_regular</item>
+    </style>
 </resources>

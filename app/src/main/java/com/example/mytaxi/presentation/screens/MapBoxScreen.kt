@@ -81,7 +81,7 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
         with(binding) {
             cardZoomIn.setOnClickListener { zoomLevel++; resetCamera() }
             cardZoomOut.setOnClickListener { zoomLevel--; resetCamera() }
-            cardNavigation.setOnClickListener {
+            cardCurrentLocation.setOnClickListener {
                 val cameraPosition = CameraOptions.Builder()
                     .center(
                         Point.fromLngLat(

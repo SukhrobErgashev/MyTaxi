@@ -5,16 +5,12 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.mytaxi.databinding.ActivityMainBinding
 import com.example.mytaxi.presentation.adapter.ViewPagerAdapter
@@ -30,7 +26,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private lateinit var adapter: ViewPagerAdapter
     private val viewBinding: ActivityMainBinding by viewBinding(R.id.mainRoot)
 
-    val tabs = arrayOf("mapbox", "tracker")
+    //private val tabs = arrayOf(resources.getString(R.string.free), resources.getString(R.string.taken))
+    private val tabs = arrayOf("Свободен", "Занять")
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +41,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         viewBinding.viewPager2.isUserInputEnabled = false
 
         TabLayoutMediator(
-            findViewById(R.id.tabLayout),
+            findViewById(R.id.tab_layout),
             findViewById(R.id.viewPager2)
         ) { tab, position ->
             tab.text = tabs[position]

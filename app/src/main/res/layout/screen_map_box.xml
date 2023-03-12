@@ -21,15 +21,15 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="32dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="@drawable/ripple_effect_card"
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="23dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
         tools:ignore="SpeakableTextPresentCheck">
 
         <ImageView
@@ -45,15 +45,15 @@
         android:id="@+id/card_notification"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:foreground="@drawable/ripple_effect_card"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="12dp"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="@drawable/ripple_effect_card"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/guideline">
 
         <ImageView
             android:id="@+id/image_notification"
@@ -86,64 +86,13 @@
         app:layout_constraintTop_toTopOf="@+id/card_notification" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="35dp"
-        android:visibility="gone"
-        app:cardCornerRadius="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/card_notification"
-        app:layout_constraintStart_toEndOf="@+id/card_drawer"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tvFree"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_effect"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/roboto_regular"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="Свободен"
-                android:textColor="@color/white"
-                android:textSize="14dp" />
-
-            <TextView
-                android:id="@+id/tvBusy"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@color/card_background"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/roboto_regular"
-                android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="Занят"
-                android:textColor="#2C2C2C"
-                android:textSize="14dp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
         android:id="@+id/card_thunder"
         android:layout_width="45dp"
-        android:foreground="@drawable/ripple_effect_card"
         android:layout_height="45dp"
         android:layout_marginStart="12dp"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="@drawable/ripple_effect_card"
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="23dp"
@@ -166,9 +115,9 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginBottom="20dp"
-        android:foreground="@drawable/ripple_effect_card"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="@drawable/ripple_effect_card"
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="20dp"
@@ -192,10 +141,10 @@
         android:id="@+id/card_zoom_out"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:foreground="@drawable/ripple_effect_card"
         android:layout_marginBottom="40dp"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="@drawable/ripple_effect_card"
         android:orientation="vertical"
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="20dp"
@@ -393,5 +342,12 @@
             android:textColor="@color/cat_name_color"
             android:textSize="14dp" />
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.08" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
