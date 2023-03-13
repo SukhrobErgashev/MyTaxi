@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
@@ -18,6 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.mytaxi.R
 import com.example.mytaxi.databinding.ScreenMapBoxBinding
+import com.example.mytaxi.domen.model.UserLocation
 import com.example.mytaxi.presentation.viewmodel.MainViewModel
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -27,9 +29,7 @@ import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.Style
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin
 import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
-import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
+import com.mapbox.maps.plugin.annotation.generated.*
 import com.mapbox.maps.plugin.compass.compass
 import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
 import com.mapbox.maps.plugin.scalebar.scalebar
@@ -49,6 +49,11 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
     private var usersLatestLocation: Point? = null
     private var isFirstEntering: Boolean = true
     private var zoomLevel: Double = 17.0
+
+    //////////////////////////////////////////////////////////////////
+    private lateinit var polylineAnnotationManager: PolylineAnnotationManager
+    private lateinit var pointAnnotationOptions: PointAnnotationOptions
+    //////////////////////////////////////////////////////////////////
 
     private val listener = OnCameraChangeListener {
         cameraState = mapboxMap.cameraState
@@ -71,10 +76,23 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
         annotationApi = mapView.annotations
         pointAnnotationManager = annotationApi.createPointAnnotationManager()
 
+        ////////////////////////////////////////////////////////////////////
+        pointAnnotationOptions = PointAnnotationOptions()
+        ////////////////////////////////////////////////////////////////////
+
         observeLatestLocation()
         setMapTheme()
         setClickListeners()
+        //setCameraBearingListener()
 
+    }
+
+    private fun setCameraBearingListener() {
+        mapboxMap.addOnCameraChangeListener {
+            val cameraRotation = mapboxMap.cameraState.bearing
+            Log.d("Bitch", "setCameraBearingListener: $cameraRotation")
+            addAnnotationToMap2(cameraRotation)
+        }
     }
 
     private fun setClickListeners() {
@@ -112,16 +130,61 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
         bitmapFromDrawableRes(requireContext(), R.drawable.ic_car)?.let {
             pointAnnotationManager.deleteAll()
 
-            val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
+            pointAnnotationOptions
                 .withPoint(Point.fromLngLat(lng, lat))
                 .withIconImage(it)
+                .withIconRotate(45.0)
             pointAnnotationManager.create(pointAnnotationOptions)
         }
+
+//        // Create an instance of the Annotation API and get the polyline manager.
+//
+//        val annotationApi = mapView.annotations
+//        polylineAnnotationManager = annotationApi.createPolylineAnnotationManager(mapView)
+//        // Define a list of geographic coordinates to be connected.
+//        val points = listOf(
+//            Point.fromLngLat(17.94, 59.25),
+//            Point.fromLngLat(lng, lat)
+//        )
+//        // Set options for the resulting line layer.
+//        val polylineAnnotationOptions: PolylineAnnotationOptions = PolylineAnnotationOptions()
+//            .withPoints(points)
+//            // Style the line that will be added to the map.
+//            .withLineColor("#ee4e8b")
+//            .withLineWidth(5.0)
+//        // Add the resulting line to the map.
+//        polylineAnnotationManager.create(polylineAnnotationOptions)
+//
+//        /////////////////////////////////////////////////////////////////////////////
 
         if (isFirstEntering) {
             initializeCamera(lng, lat); return
         }
         resetCamera()
+    }
+
+    private fun addAnnotationToMap2(fuck: Double) {
+
+        if (usersLatestLocation != null) {
+
+            bitmapFromDrawableRes(requireContext(), R.drawable.ic_car)?.let {
+                pointAnnotationManager.deleteAll()
+
+                pointAnnotationOptions
+                    .withPoint(usersLatestLocation!!)
+                    .withIconImage(it)
+                    .withIconRotate(45.0 - fuck)
+                pointAnnotationManager.create(pointAnnotationOptions)
+            }
+
+            if (isFirstEntering) {
+                initializeCamera(
+                    usersLatestLocation!!.longitude(),
+                    usersLatestLocation!!.latitude()
+                ); return
+            }
+            resetCamera()
+        }
     }
 
     private fun initializeCamera(lng: Double, lat: Double) {
