@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mapBoxScreen"
-        android:name="com.example.mytaxi.presentation.screens.MapBoxScreen"
+        android:name="dev.sukhrob.mytaxi.presentation.screens.MapBoxScreen"
         android:label="screen_map_box"
         tools:layout="@layout/screen_map_box" />
 </navigation>

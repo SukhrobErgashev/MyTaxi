@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".presentation.screens.MapBoxScreen">
+    tools:context="dev.sukhrob.mytaxi.presentation.screens.MapBoxScreen">
 
     <com.mapbox.maps.MapView
         android:id="@+id/mapView"
@@ -123,7 +123,7 @@
         android:paddingBottom="2dp"
         android:text="1"
         android:textColor="@color/white"
-        android:textSize="10dp"
+        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/card_notification"
         app:layout_constraintEnd_toEndOf="@+id/card_notification"
         app:layout_constraintStart_toStartOf="@+id/card_notification"
@@ -284,7 +284,7 @@
                 android:paddingBottom="4dp"
                 android:text="1"
                 android:textColor="@color/white"
-                android:textSize="10dp"
+                android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/image_orders"
                 app:layout_constraintEnd_toEndOf="@+id/image_orders"
                 app:layout_constraintStart_toStartOf="@+id/image_orders"
@@ -299,9 +299,9 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center"
-            android:text="Заказы"
+            android:text="@string/orders"
             android:textColor="@color/cat_name_color"
-            android:textSize="14dp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -382,9 +382,9 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center"
-            android:text="Тарифы"
+            android:text="@string/tariff"
             android:textColor="@color/cat_name_color"
-            android:textSize="14dp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.mytaxi'
+    namespace 'dev.sukhrob.mytaxi'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.mytaxi"
+        applicationId "dev.sukhrob.mytaxi"
         minSdk 21
         targetSdk 33
         versionCode 1
