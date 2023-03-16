@@ -17,6 +17,7 @@ import dev.sukhrob.mytaxi.R
 import dev.sukhrob.mytaxi.databinding.ScreenMapBoxBinding
 import dev.sukhrob.mytaxi.presentation.viewmodel.MainViewModel
 import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdate
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
@@ -49,8 +50,6 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box), OnMapReadyCallback {
 
     private lateinit var symbolManager: SymbolManager
     private lateinit var markerIcon: Symbol
-
-    private var counter = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -127,10 +126,6 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box), OnMapReadyCallback {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.latestLocation.collect {
                 updateCamera(it)
-                if (counter == 3) {
-                    showCurrentLocation()
-                }
-                counter++
             }
         }
     }
@@ -182,6 +177,7 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box), OnMapReadyCallback {
     }
 
     private fun setMapTheme() {
+        mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(16.0))
         mapboxMap.setStyle(
             if (isUsingNightModeResources()) Style.DARK else Style.MAPBOX_STREETS
         ) { style ->
