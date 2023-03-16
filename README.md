@@ -10,7 +10,7 @@ Used Technologies
 - Map: MapBox Maps SDK
 - Others: ViewBinding, Room, Foreground Service
 
-# Screenrecordings: (wait a minute, gifs have little bit bigger size)
+## Screenrecordings: (wait a minute, gifs have little bit bigger size)
 
 <table>
   <tr>
