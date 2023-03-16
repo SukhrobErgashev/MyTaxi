@@ -2,12 +2,12 @@ package dev.sukhrob.mytaxi.service
 
 import android.Manifest
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import dev.sukhrob.mytaxi.R
@@ -44,7 +44,7 @@ class LocationForegroundService : Service(), LocationListener {
 
         locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setWaitForAccurateLocation(false)
-            .setMinUpdateDistanceMeters(3f)
+            .setMinUpdateDistanceMeters(2f)
             .setMinUpdateIntervalMillis(500)
             .setMaxUpdateDelayMillis(1000)
             .build()
@@ -82,12 +82,14 @@ class LocationForegroundService : Service(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
+        Log.d("Bitch", location.bearing.toString())
         scope.launch {
             repository.insertUserLocation(
                 UserLocation(
                     Calendar.getInstance().timeInMillis,
                     location.longitude,
-                    location.latitude
+                    location.latitude,
+                    location.bearing.toDouble()
                 )
             )
         }
@@ -112,7 +114,7 @@ class LocationForegroundService : Service(), LocationListener {
             this,
             0,
             notificationIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+            PendingIntent.FLAG_IMMUTABLE
         )
 
         // Create the notification builder

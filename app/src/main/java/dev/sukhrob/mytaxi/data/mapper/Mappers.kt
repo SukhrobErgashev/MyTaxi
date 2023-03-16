@@ -8,7 +8,8 @@ object Mappers {
         return UserLocation(
             this.storedTime,
             this.longitude,
-            this.latitude
+            this.latitude,
+            this.bearing
         )
     }
 
@@ -16,7 +17,8 @@ object Mappers {
         return UserLocationEntity(
             this.storedTime,
             this.longitude,
-            this.latitude
+            this.latitude,
+            this.bearing
         )
     }
 }

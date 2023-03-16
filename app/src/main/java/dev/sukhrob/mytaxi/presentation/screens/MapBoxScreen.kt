@@ -1,15 +1,12 @@
 package dev.sukhrob.mytaxi.presentation.screens
 
-import android.content.Context
+import android.animation.ObjectAnimator
+import android.animation.TypeEvaluator
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.DrawableRes
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -19,23 +16,29 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import dev.sukhrob.mytaxi.R
 import dev.sukhrob.mytaxi.databinding.ScreenMapBoxBinding
 import dev.sukhrob.mytaxi.presentation.viewmodel.MainViewModel
-import com.mapbox.geojson.Point
-import com.mapbox.maps.CameraOptions
-import com.mapbox.maps.CameraState
-import com.mapbox.maps.MapView
-import com.mapbox.maps.MapboxMap
-import com.mapbox.maps.Style
-import com.mapbox.maps.plugin.annotation.AnnotationPlugin
-import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.*
-import com.mapbox.maps.plugin.compass.compass
-import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener
-import com.mapbox.maps.plugin.scalebar.scalebar
+import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
+import com.mapbox.mapboxsdk.location.LocationComponentOptions
+import com.mapbox.mapboxsdk.location.modes.CameraMode
+import com.mapbox.mapboxsdk.location.modes.RenderMode
+import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.mapbox.mapboxsdk.utils.BitmapUtils
 import dagger.hilt.android.AndroidEntryPoint
+import dev.sukhrob.mytaxi.domen.model.UserLocation
+import dev.sukhrob.mytaxi.utils.CAR_MARKER
+import dev.sukhrob.mytaxi.utils.toLatLng
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MapBoxScreen : Fragment(R.layout.screen_map_box) {
+class MapBoxScreen : Fragment(R.layout.screen_map_box), OnMapReadyCallback {
 
     private val binding by viewBinding(ScreenMapBoxBinding::bind)
     private val viewModel: MainViewModel by viewModels()
@@ -44,58 +47,78 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
     private lateinit var mapboxMap: MapboxMap
     private lateinit var bitmapIcon: Bitmap
 
-    private var cameraState: CameraState? = null
-    private var isFirstEntering: Boolean = true
+    private lateinit var symbolManager: SymbolManager
+    private lateinit var markerIcon: Symbol
 
-    private lateinit var pointAnnotationOptions: PointAnnotationOptions
-
-    private val listener = OnCameraChangeListener {
-        cameraState = mapboxMap.cameraState
-        viewModel.setZoomLevel(cameraState!!.zoom)
-        viewModel.setCameraBearing(cameraState!!.bearing)
-    }
-
-    private lateinit var annotationApi: AnnotationPlugin
-    private lateinit var pointAnnotationManager: PointAnnotationManager
+    private var counter = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         mapView = binding.mapView
-        mapView.compass.enabled = false
-        mapView.scalebar.enabled = false
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
 
-        mapboxMap = mapView.getMapboxMap()
-        mapboxMap.addOnCameraChangeListener(listener)
-        bitmapIcon = bitmapFromDrawableRes(requireContext(), R.drawable.ic_car)!!
+        bitmapIcon = BitmapUtils.getBitmapFromDrawable(
+            ResourcesCompat.getDrawable(this.resources, R.drawable.ic_car, null)
+        )!!
 
-        annotationApi = mapView.annotations
-        pointAnnotationManager = annotationApi.createPointAnnotationManager()
-        pointAnnotationOptions = PointAnnotationOptions()
-
-        observeLatestLocation()
-        observeCameraBearing()
-
-        setMapTheme()
         setClickListeners()
+    }
 
+    override fun onMapReady(mapboxMap: MapboxMap) {
+        this.mapboxMap = mapboxMap
+        observeLatestLocation()
+        setMapTheme()
     }
 
     private fun setClickListeners() {
         with(binding) {
-            cardZoomIn.setOnClickListener { viewModel.increaseZoomLevel(); resetCamera() }
-            cardZoomOut.setOnClickListener { viewModel.decreaseZoomLevel(); resetCamera() }
+            cardZoomIn.setOnClickListener {
+                zoomIn()
+            }
+            cardZoomOut.setOnClickListener {
+                zoomOut()
+            }
             cardCurrentLocation.setOnClickListener {
-                val cameraPosition = CameraOptions.Builder()
-                    .center(
-                        Point.fromLngLat(
-                            viewModel.latestLocation.value.longitude,
-                            viewModel.latestLocation.value.latitude
-                        )
-                    )
-                    .zoom(viewModel.zoomLevel.value)
-                    .build()
-                mapboxMap.setCamera(cameraPosition)
+                showCurrentLocation()
+            }
+        }
+    }
+
+    private fun zoomIn() {
+        val position = mapboxMap.cameraPosition
+        mapboxMap.animateCamera(
+            CameraUpdateFactory.newCameraPosition(
+                CameraPosition.Builder(
+                    position
+                ).zoom(position.zoom + 0.8).build()
+            ), 1000
+        )
+    }
+
+    private fun zoomOut() {
+        val position = mapboxMap.cameraPosition
+        mapboxMap.animateCamera(
+            CameraUpdateFactory.newCameraPosition(
+                CameraPosition.Builder(
+                    position
+                ).zoom(position.zoom - 0.8).build()
+            ), 1024
+        )
+    }
+
+    private fun showCurrentLocation() {
+        val locationComponent = mapboxMap.locationComponent
+        if (locationComponent.isLocationComponentActivated) {
+            val lastLocation: LatLng = viewModel.latestLocation.value.toLatLng()
+            lastLocation.let {
+                val cameraPosition =
+                    CameraPosition.Builder().target(LatLng(lastLocation)).zoom(16.0).build()
+                mapboxMap.animateCamera(
+                    CameraUpdateFactory.newCameraPosition(cameraPosition),
+                    500
+                )
             }
         }
     }
@@ -103,94 +126,48 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
     private fun observeLatestLocation() = lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.latestLocation.collect {
-                if (it.longitude != -1.0) {
-                    addAnnotationToMap(it.longitude, it.latitude)
+                updateCamera(it)
+                if (counter == 3) {
+                    showCurrentLocation()
                 }
+                counter++
             }
         }
     }
 
-    private fun observeCameraBearing() = lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.cameraBearing.collect {
-                with(viewModel.latestLocation.value) {
-                    if (latitude != -1.0) addAnnotationToMap(longitude, latitude)
+    private fun updateCamera(userLocation: UserLocation) {
+        val camera = CameraUpdateFactory.newCameraPosition(
+            CameraPosition.Builder()
+                .target(LatLng(userLocation.latitude, userLocation.longitude))
+                .bearing(userLocation.bearing)
+                .build()
+        )
+
+        mapboxMap.let {
+            if (::markerIcon.isInitialized) {
+                mapboxMap.animateCamera(camera)
+                val anim = ObjectAnimator.ofObject(
+                    latLngEvaluator,
+                    markerIcon.latLng,
+                    LatLng(userLocation.latitude, userLocation.longitude)
+                ).setDuration(500L)
+                anim.addUpdateListener { valueAnimator ->
+                    markerIcon.latLng = valueAnimator.animatedValue as LatLng
+                    symbolManager.update(markerIcon)
                 }
+                anim.start()
             }
         }
     }
 
-    private fun addAnnotationToMap(lng: Double, lat: Double) {
-        if (viewModel.iconRotation.value != -0.0) {
-            pointAnnotationManager.deleteAll()
-            pointAnnotationOptions
-                .withPoint(Point.fromLngLat(lng, lat))
-                .withIconImage(bitmapIcon)
-                .withIconRotate(viewModel.iconRotation.value - viewModel.cameraBearing.value)
-                .withIconSize(viewModel.iconSize.value)
-
-            pointAnnotationManager.create(pointAnnotationOptions)
-        }
-        if (isFirstEntering) initializeCamera(lng, lat) else resetCamera()
-    }
-
-    private fun initializeCamera(lng: Double, lat: Double) {
-        val cameraPosition = CameraOptions.Builder()
-            .center(Point.fromLngLat(lng, lat))
-            .zoom(17.0)
-            .build()
-        mapboxMap.setCamera(cameraPosition)
-        cameraState = mapboxMap.cameraState
-        isFirstEntering = false
-    }
-
-    private fun resetCamera() {
-        val cameraPosition = CameraOptions.Builder()
-            .center(cameraState?.center)
-            .zoom(viewModel.zoomLevel.value)
-            .build()
-        mapboxMap.setCamera(cameraPosition)
-    }
-
-    private fun bitmapFromDrawableRes(context: Context, @DrawableRes resourceId: Int) =
-        convertDrawableToBitmap(AppCompatResources.getDrawable(context, resourceId))
-
-    private fun convertDrawableToBitmap(sourceDrawable: Drawable?): Bitmap? {
-        if (sourceDrawable == null) {
-            return null
-        }
-        return if (sourceDrawable is BitmapDrawable) {
-            sourceDrawable.bitmap
-        } else {
-            val constantState = sourceDrawable.constantState ?: return null
-            val drawable = constantState.newDrawable().mutate()
-            val bitmap: Bitmap = Bitmap.createBitmap(
-                drawable.intrinsicWidth, drawable.intrinsicHeight,
-                Bitmap.Config.ARGB_8888
-            )
-
-            val canvas = Canvas(bitmap)
-            drawable.setBounds(0, 0, canvas.width, canvas.height)
-            drawable.draw(canvas)
-            bitmap
-        }
-    }
-
-    private fun setMapTheme() {
-        if (isUsingNightModeResources()) {
-            with(binding) {
-                mapView.getMapboxMap().loadStyleUri(Style.DARK)
-                imageOrders.setBackgroundResource(R.drawable.shape_category_night)
-                imageFrieze.setBackgroundResource(R.drawable.shape_category_night)
-                imageTariff.setBackgroundResource(R.drawable.shape_category_night)
-            }
-        } else {
-            with(binding) {
-                mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS)
-                imageOrders.setBackgroundResource(R.drawable.shape_category)
-                imageFrieze.setBackgroundResource(R.drawable.shape_category)
-                imageTariff.setBackgroundResource(R.drawable.shape_category)
-            }
+    private val latLngEvaluator: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude =
+                startValue.latitude + (endValue.latitude - startValue.latitude) * fraction
+            latLng.longitude =
+                startValue.longitude + (endValue.longitude - startValue.longitude) * fraction
+            return latLng
         }
     }
 
@@ -204,9 +181,75 @@ class MapBoxScreen : Fragment(R.layout.screen_map_box) {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapboxMap.removeOnCameraChangeListener(listener)
+    private fun setMapTheme() {
+        mapboxMap.setStyle(
+            if (isUsingNightModeResources()) Style.DARK else Style.MAPBOX_STREETS
+        ) { style ->
+            mapboxMap.uiSettings.apply {
+                isCompassEnabled = false
+                isLogoEnabled = false
+                isAttributionEnabled = false
+            }
+            setLocationComponent(style)
+            style.addImage(CAR_MARKER, bitmapIcon)
+            symbolManager = SymbolManager(mapView, mapboxMap, style).apply {
+                iconAllowOverlap = true
+                iconIgnorePlacement = true
+            }
+            markerIcon =
+                symbolManager.create(
+                    SymbolOptions().withLatLng(viewModel.latestLocation.value.toLatLng())
+                        .withIconImage(CAR_MARKER).withDraggable(false)
+                )
+        }
     }
 
+    private fun setLocationComponent(loadedMapStyle: Style) {
+        val customLocationComponentOptions =
+            LocationComponentOptions.builder(requireContext()).build()
+        val locationComponentActivationOptions =
+            LocationComponentActivationOptions.builder(requireContext(), loadedMapStyle)
+                .locationComponentOptions(customLocationComponentOptions)
+                .build()
+        mapboxMap.locationComponent.apply {
+            activateLocationComponent(locationComponentActivationOptions)
+            cameraMode = CameraMode.TRACKING
+            renderMode = RenderMode.COMPASS
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView.onStop()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
+    }
 }

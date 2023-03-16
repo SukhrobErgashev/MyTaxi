@@ -8,5 +8,6 @@ data class UserLocationEntity(
     @PrimaryKey
     val storedTime: Long,
     val longitude: Double,
-    val latitude: Double
+    val latitude: Double,
+    val bearing: Double
 )

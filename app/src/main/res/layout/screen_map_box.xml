@@ -7,7 +7,7 @@
     android:background="@color/background"
     tools:context="dev.sukhrob.mytaxi.presentation.screens.MapBoxScreen">
 
-    <com.mapbox.maps.MapView
+    <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/map_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -252,8 +252,8 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_orders"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
@@ -265,11 +265,11 @@
 
                 <ImageView
                     android:id="@+id/image_orders"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     android:background="@drawable/shape_category"
                     android:padding="12dp"
-                    android:src="@drawable/ic_wave"
+                    android:src="@drawable/ic_orders"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -324,8 +324,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_frieze"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="@drawable/ripple_cards"
@@ -334,8 +334,8 @@
 
             <ImageView
                 android:id="@+id/image_frieze"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:background="@drawable/shape_category"
                 android:padding="12dp"
                 android:src="@drawable/ic_rocket" />
@@ -367,8 +367,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_tariff"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="@drawable/ripple_cards"
@@ -377,8 +377,8 @@
 
             <ImageView
                 android:id="@+id/image_tariff"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:background="@drawable/shape_category"
                 android:padding="12dp"
                 android:src="@drawable/ic_tariff" />
