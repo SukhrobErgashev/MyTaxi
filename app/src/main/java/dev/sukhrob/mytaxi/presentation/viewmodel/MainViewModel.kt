@@ -1,13 +1,11 @@
 package dev.sukhrob.mytaxi.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mapbox.common.location.Location
-import com.mapbox.geojson.Point
 import dev.sukhrob.mytaxi.domen.model.UserLocation
 import dev.sukhrob.mytaxi.domen.repository.MyTaxiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -28,7 +26,7 @@ class MainViewModel @Inject constructor(private val repository: MyTaxiRepository
     private var _iconRotation = MutableStateFlow(0.0)
     val iconRotation: StateFlow<Double> get() = _iconRotation
 
-    private var _iconSize = MutableStateFlow(0.7)
+    private var _iconSize = MutableStateFlow(0.5)
     val iconSize: StateFlow<Double> get() = _iconSize
 
     private var _storedLocationList = MutableStateFlow<List<UserLocation>>(emptyList())
@@ -38,7 +36,7 @@ class MainViewModel @Inject constructor(private val repository: MyTaxiRepository
     val latestLocation: StateFlow<UserLocation> get() = _latestLocation
 
     private var _beforeLatest = MutableStateFlow(UserLocation.default())
-    val beforeLatest: StateFlow<UserLocation> get() = _beforeLatest
+    //val beforeLatest: StateFlow<UserLocation> get() = _beforeLatest
 
     init {
         getStoredLocationList()
@@ -59,30 +57,30 @@ class MainViewModel @Inject constructor(private val repository: MyTaxiRepository
     }
 
     private fun computeBearing() {
-        // Define the two locations
-
-        val iconRotation = bearing(
-            beforeLatest.value.latitude,
-            beforeLatest.value.longitude,
-            latestLocation.value.latitude,
-            latestLocation.value.longitude
-        )
-
-        _iconRotation.value = iconRotation
+        viewModelScope.launch(Dispatchers.Default) {
+            with(_storedLocationList.value) {
+                if (this.size > 2) {
+                   val iconRotation = bearing(this[1], this[0])
+                    _iconRotation.value = iconRotation
+                }
+            }
+        }
     }
 
-    private fun bearing(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val dLon = Math.toRadians(lon2 - lon1)
-        val y = sin(dLon) * cos(Math.toRadians(lat2))
-        val x = cos(Math.toRadians(lat1)) * sin(Math.toRadians(lat2)) -
-                sin(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * cos(dLon)
+    private fun bearing(point1: UserLocation, point2: UserLocation): Double {
+        val dLon = Math.toRadians(point2.longitude - point1.longitude)
+        val y = sin(dLon) * cos(Math.toRadians(point2.latitude))
+        val x = cos(Math.toRadians(point1.latitude)) * sin(Math.toRadians(point2.latitude)) -
+                sin(Math.toRadians(point1.latitude)) * cos(Math.toRadians(point2.latitude)) * cos(dLon)
         var bearing = Math.toDegrees(atan2(y, x))
         bearing = (bearing + 360) % 360
         return bearing
     }
 
     fun increaseZoomLevel() {
-        _zoomLevel.value = _zoomLevel.value + 1.0
+        if (zoomLevel.value < 17) {
+            _zoomLevel.value = _zoomLevel.value + 1.0
+        }
     }
 
     fun decreaseZoomLevel() {

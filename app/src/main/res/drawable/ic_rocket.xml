@@ -13,6 +13,6 @@
         android:fillType="evenOdd"/>
     <path
         android:pathData="M0,0h32v32h-32z"
-        android:fillColor="@color/cat_color"/>
+        android:fillColor="@color/icon_tint_color"/>
   </group>
 </vector>

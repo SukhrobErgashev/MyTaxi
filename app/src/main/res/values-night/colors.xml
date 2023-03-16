@@ -5,13 +5,9 @@
     <color name="card_background">#BEBEBE</color>
     <color name="card_ripple_effect_color">#ffffff</color>
     <color name="tab_background_color">#BEBEBE</color>
+    <color name="splash_background">#ffffff</color>
 
     <color name="green">#00CA4C</color>
-    <color name="selected_on">#E3E2E4</color>
-    <color name="cat_color">#1E1E1E</color>
-    <color name="cat_name_color">#BEBEBE</color>
-    <color name="naw_draw_background">#212121</color>
-    <color name="naw_draw_item_click_background">#7A000000</color>
-    <color name="user_name_color">#FFFFFF</color>
-    <color name="naw_draw_text_color">#FFFFFF</color>
+    <color name="icon_tint_color">#1E1E1E</color>
+    <color name="text_color">#bebebe</color>
 </resources>

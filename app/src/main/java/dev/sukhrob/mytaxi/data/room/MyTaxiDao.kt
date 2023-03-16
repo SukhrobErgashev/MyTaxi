@@ -14,5 +14,5 @@ interface MyTaxiDao {
 
     @Query("SELECT * FROM UserLocationEntity ORDER BY storedTime DESC")
     fun getStoredLocationList(): Flow<List<UserLocationEntity>>
-
+    
 }

@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_MyTaxi)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -47,12 +48,8 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            // Location permission is already granted
-            // You can start using the location services
             startLocationService()
         } else {
-            // Location permission is not granted
-            // Request permission
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
@@ -72,15 +69,17 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             LOCATION_PERMISSION_REQUEST_CODE -> {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Location permission granted
-                    // You can start using the location services
                     startLocationService()
                 } else {
-                    // Location permission denied
-                    // You can't use the location services
-                    // ...
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ),
+                        LOCATION_PERMISSION_REQUEST_CODE
+                    )
                 }
                 return
             }

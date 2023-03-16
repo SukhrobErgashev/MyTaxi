@@ -1,10 +1,8 @@
 package dev.sukhrob.mytaxi.service
 
 import android.Manifest
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -46,12 +44,18 @@ class LocationForegroundService : Service(), LocationListener {
 
         locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setWaitForAccurateLocation(false)
-            .setMinUpdateIntervalMillis(1000)
+            .setMinUpdateDistanceMeters(3f)
+            .setMinUpdateIntervalMillis(500)
             .setMaxUpdateDelayMillis(1000)
             .build()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        if (intent?.action == ACTION_STOP_FOREGROUND_SERVICE) {
+            stopSelf()
+        }
+
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -102,11 +106,21 @@ class LocationForegroundService : Service(), LocationListener {
             notificationManager.createNotificationChannel(notificationChannel)
         }
 
+        val notificationIntent = Intent(this, LocationForegroundService::class.java)
+        notificationIntent.action = ACTION_STOP_FOREGROUND_SERVICE
+        val pendingIntent = PendingIntent.getService(
+            this,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
         // Create the notification builder
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Location Service")
             .setContentText("Getting your location...")
             .setSmallIcon(R.drawable.notification_logo)
+            .addAction(R.drawable.notification_logo, "Stop Service", pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
 
@@ -118,5 +132,9 @@ class LocationForegroundService : Service(), LocationListener {
         super.onDestroy()
         job.cancel()
         fusedLocationClient.removeLocationUpdates(this)
+    }
+
+    companion object {
+        const val ACTION_STOP_FOREGROUND_SERVICE = "dev.sukhrob.mytaxi.STOP_FOREGROUND_SERVICE"
     }
 }
